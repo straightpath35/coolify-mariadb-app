@@ -4,14 +4,10 @@ FROM node:18-alpine
 # Create app dir
 WORKDIR /usr/src/app
 
-# Install dependencies (if this is a Node project)
+# Install dependencies
 COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev
 
-RUN if [ -f package.json ]; then \
-      if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit=dev || true; fi; \
-    else \
-      echo "no package.json, skipping npm step"; \
-    fi
 
 # Copy source
 COPY . .
