@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coolify-mariadb-app:latest
+    restart: always
+    environment:
+      - PORT=3000
+      - INIT_DB=true
+      # DB connection variables should be set in Coolify UI as env vars (do NOT hardcode secrets here)
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/usr/src/app/uploads
+
+    # Optional: Traefik labels if you want to map a domain with Coolify/Traefik - replace example.com
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.coolify-app.rule=Host(`example.com`)"
+
+volumes:
+  uploads:
